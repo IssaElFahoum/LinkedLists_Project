@@ -3,7 +3,6 @@ using namespace std;
 
 class Node	//Node of linked list
 {
-
 	public: 
 		int data;
 		Node* next;
@@ -56,6 +55,94 @@ void insertAtTail(Node** headRef, int newData)
 
     last->next = newNode;
     return;
+}
+
+//Delete a node in linked list given head as reference and first occurence of key in the list
+void deleteNode(Node** headRef, int key)
+{
+    Node* delRef = *headRef;  //Store head node
+    Node* prev = NULL;
+
+    //If head has the key to be deleted
+    if (delRef != NULL && delRef->data == key)
+    {
+        *headRef = delRef->next;
+        delete delRef;
+        return;
+    }
+
+    //Else search for the key
+    else 
+    {
+        while (delRef != NULL && delRef->data != key)
+        {
+            prev = delRef;
+            delRef = delRef->next;
+        }
+
+        if (delRef == NULL) //Key was not found in list
+            return;
+
+        prev->next = delRef->next;  //Unlink node from the linked list
+        delete delRef;
+    }
+}
+
+//Deletes the node of a list recursively
+void deleteNode(Node*& head, int key)
+{
+    if (head == NULL)
+        return;
+
+    if (head->data == key)
+    {
+        Node* t = head;
+        head = head->next;
+        delete(t);
+        return;
+    }
+
+    deleteNode(head->next, key);
+
+}
+
+void deleteNode(Node** head_ref, int position)
+{
+    // If linked list is empty
+    if (*head_ref == NULL)
+        return;
+
+    // Store head node
+    Node* temp = *head_ref;
+
+    // If head needs to be removed
+    if (position == 0) {
+
+        // Change head
+        *head_ref = temp->next;
+
+        // Free old head
+        free(temp);
+        return;
+    }
+
+    // Find previous node of the node to be deleted
+    for (int i = 0; temp != NULL && i < position - 1; i++)
+        temp = temp->next;
+
+    // If position is more than number of nodes
+    if (temp == NULL || temp->next == NULL)
+        return;
+
+    // Node temp->next is the node to be deleted
+    // Store pointer to the next of node to be deleted
+    Node* next = temp->next->next;
+
+    // Unlink the node from linked list
+    free(temp->next); // Free memory
+
+    // Unlink the deleted node from list
+    temp->next = next;
 }
 
 // This function prints contents of
